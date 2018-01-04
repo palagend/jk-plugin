@@ -100,10 +100,8 @@ public class KeycloakSecurityRealm extends SecurityRealm {
             String kid = null;
             HttpGet get = new HttpGet(keycloakDeployment.getJwksUrl());
             HttpClient client = keycloakDeployment.getClient();
-            LOGGER.info("client is null?: " + (client == null));
             org.apache.http.HttpResponse response = client.execute(get);
             int statusCode = response.getStatusLine().getStatusCode();
-            LOGGER.info("statusCode = " + statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity httpEntity = response.getEntity();
                 if (httpEntity != null) {
@@ -111,8 +109,8 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                     kid = JWKSUtils.getKeyForUse(jsonWebKeySet, JWK.Use.SIG).getKeyId();
                 }
             }
-            LOGGER.info("kid is: " + kid);
             AccessToken token = RSATokenVerifier.verifyToken(tokenString, keycloakDeployment.getPublicKeyLocator().getPublicKey(kid, keycloakDeployment), keycloakDeployment.getRealm());
+            // TODO: 2018/1/4 org.keycloak.common.VerificationException: Invalid token issuer. Expected 'ci', but was 'http://keycloak.palagend.com/auth/realms/ci'
             if (idTokenString != null) {
                 JWSInput input = new JWSInput(idTokenString);
 
