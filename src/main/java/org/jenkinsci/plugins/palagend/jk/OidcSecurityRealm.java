@@ -21,7 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-package org.jenkinsci.plugins.oic;
+package org.jenkinsci.plugins.palagend.jk;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.BearerToken;
@@ -60,11 +60,11 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 /**
-* Login with OpenID Connect / OAuth 2
-*
-* @author Michael Bischoff
-*/
-public class OicSecurityRealm extends SecurityRealm {
+ * Login with OpenID Connect / OAuth 2
+ *
+ * @author Michael Bischoff
+ */
+public class OidcSecurityRealm extends SecurityRealm {
 
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
     private final HttpTransport httpTransport;
@@ -83,9 +83,9 @@ public class OicSecurityRealm extends SecurityRealm {
     private final boolean disableSslVerification;
 
     @DataBoundConstructor
-    public OicSecurityRealm(String clientId, String clientSecret, String tokenServerUrl, String authorizationServerUrl,
-            String userInfoServerUrl, String userNameField, String tokenFieldToCheckKey, String tokenFieldToCheckValue,
-            String fullNameFieldName, String emailFieldName, String scopes, boolean disableSslVerification) throws IOException {
+    public OidcSecurityRealm(String clientId, String clientSecret, String tokenServerUrl, String authorizationServerUrl,
+                             String userInfoServerUrl, String userNameField, String tokenFieldToCheckKey, String tokenFieldToCheckValue,
+                             String fullNameFieldName, String emailFieldName, String scopes, boolean disableSslVerification) throws IOException {
         this.clientId = clientId;
         this.clientSecret = Secret.fromString(clientSecret);
         this.tokenServerUrl = tokenServerUrl;
@@ -165,20 +165,20 @@ public class OicSecurityRealm extends SecurityRealm {
     }
 
     /**
-    * Login begins with our {@link #doCommenceLogin(String,String)} method.
-    */
+     * Login begins with our {@link #doCommenceLogin(String, String)} method.
+     */
     @Override
     public String getLoginUrl() {
         return "securityRealm/commenceLogin";
     }
 
     /*
-    * Acegi has this notion that first an {@link org.acegisecurity.Authentication} object is created
-    * by collecting user information and then the act of authentication is done
-    * later (by {@link org.acegisecurity.AuthenticationManager}) to verify it. But in case of OpenID,
-    * we create an {@link org.acegisecurity.Authentication} only after we verified the user identity,
-    * so {@link org.acegisecurity.AuthenticationManager} becomes no-op.
-    */
+        * Acegi has this notion that first an {@link org.acegisecurity.Authentication} object is created
+        * by collecting user information and then the act of authentication is done
+        * later (by {@link org.acegisecurity.AuthenticationManager}) to verify it. But in case of OpenID,
+        * we create an {@link org.acegisecurity.Authentication} only after we verified the user identity,
+        * so {@link org.acegisecurity.AuthenticationManager} becomes no-op.
+        */
     @Override
     public SecurityComponents createSecurityComponents() {
         return new SecurityComponents(
@@ -193,8 +193,8 @@ public class OicSecurityRealm extends SecurityRealm {
     }
 
     /**
-    * handles the the securityRealm/commenceLogin resource
-    */
+     * handles the the securityRealm/commenceLogin resource
+     */
     public HttpResponse doCommenceLogin(@QueryParameter String from, @Header("Referer") final String referer) throws IOException {
         final String redirectOnFinish = determineRedirectTarget(from, referer);
 
@@ -210,10 +210,10 @@ public class OicSecurityRealm extends SecurityRealm {
                 clientId,
                 authorizationServerUrl
         )
-            .setScopes(Arrays.asList(scopes))
-            .build();
+                .setScopes(Arrays.asList(scopes))
+                .build();
 
-        return new OicSession(flow, from, buildOAuthRedirectUrl()) {
+        return new OidcSession(flow, from, buildOAuthRedirectUrl()) {
             @Override
             public HttpResponse onSuccess(String authorizationCode) {
                 try {
@@ -230,22 +230,22 @@ public class OicSecurityRealm extends SecurityRealm {
                         username = userInfo.get(userNameField);
                     }
 
-                    if(username == null) {
-                        return HttpResponses.error(500,"no field '" + userNameField + "' was supplied in the token payload to be used as the username");
+                    if (username == null) {
+                        return HttpResponses.error(500, "no field '" + userNameField + "' was supplied in the token payload to be used as the username");
                     }
-                    if(failedCheckOfTokenField(idToken)) {
+                    if (failedCheckOfTokenField(idToken)) {
                         return HttpResponses.errorWithoutStack(401, "Unauthorized");
                     }
 
                     flow.createAndStoreCredential(response, null);
 
                     loginAndSetUserData(username.toString(),
-                            new GrantedAuthority[] { SecurityRealm.AUTHENTICATED_AUTHORITY }, idToken, userInfo);
+                            new GrantedAuthority[]{SecurityRealm.AUTHENTICATED_AUTHORITY}, idToken, userInfo);
 
                     return new HttpRedirect(redirectOnFinish);
 
                 } catch (IOException e) {
-                    return HttpResponses.error(500,e);
+                    return HttpResponses.error(500, e);
                 }
 
             }
@@ -270,12 +270,12 @@ public class OicSecurityRealm extends SecurityRealm {
     }
 
     private boolean failedCheckOfTokenField(IdToken idToken) {
-        if(tokenFieldToCheckKey == null || tokenFieldToCheckValue == null) {
+        if (tokenFieldToCheckKey == null || tokenFieldToCheckValue == null) {
             return false;
         }
 
         Object value = idToken.getPayload().get(tokenFieldToCheckKey);
-        if(value == null) {
+        if (value == null) {
             return true;
         }
 
@@ -283,7 +283,7 @@ public class OicSecurityRealm extends SecurityRealm {
     }
 
     private UsernamePasswordAuthenticationToken loginAndSetUserData(String userName, GrantedAuthority[] authorities,
-            IdToken idToken, GenericJson userInfo) throws IOException {
+                                                                    IdToken idToken, GenericJson userInfo) throws IOException {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName, "", authorities);
         SecurityContextHolder.getContext().setAuthentication(token);
 
@@ -305,7 +305,7 @@ public class OicSecurityRealm extends SecurityRealm {
 
     private String getField(IdToken idToken, String fullNameFieldName) {
         Object value = idToken.getPayload().get(fullNameFieldName);
-        if(value != null) {
+        if (value != null) {
             return String.valueOf(value);
         }
         return null;
@@ -335,53 +335,53 @@ public class OicSecurityRealm extends SecurityRealm {
     }
 
     /**
-    * This is where the user comes back to at the end of the OpenID redirect ping-pong.
-    */
+     * This is where the user comes back to at the end of the OpenID redirect ping-pong.
+     */
     public HttpResponse doFinishLogin(StaplerRequest request) throws IOException {
-        return OicSession.getCurrent().doFinishLogin(request);
+        return OidcSession.getCurrent().doFinishLogin(request);
     }
 
     @Extension
     public static final class DescriptorImpl extends Descriptor<SecurityRealm> {
         public String getDisplayName() {
-            return "Login with Openid Connect";
+            return "Login with Keycloak by oidc protocol";
         }
 
         public FormValidation doCheckClientId(@QueryParameter String clientId) {
             if (clientId == null || clientId.trim().length() == 0) {
-                return FormValidation.error("Client id is required.");
+                return FormValidation.error("clientId is required.");
             }
             return FormValidation.ok();
         }
 
         public FormValidation doCheckClientSecret(@QueryParameter String clientSecret) {
             if (clientSecret == null || clientSecret.trim().length() == 0) {
-                return FormValidation.error("Client secret is required.");
+                return FormValidation.error("clientSecret is required.");
             }
             return FormValidation.ok();
         }
 
         public FormValidation doCheckTokenServerUrl(@QueryParameter String tokenServerUrl) {
             if (tokenServerUrl == null) {
-                return FormValidation.error("Token Server Url Key is required.");
+                return FormValidation.error("tokenServerUrl is required.");
             }
             try {
                 new URL(tokenServerUrl);
                 return FormValidation.ok();
             } catch (MalformedURLException e) {
-                return FormValidation.error(e,"Not a valid url.");
+                return FormValidation.error(e, "Not a valid url.");
             }
         }
 
         public FormValidation doCheckAuthorizationServerUrl(@QueryParameter String authorizationServerUrl) {
             if (authorizationServerUrl == null) {
-                return FormValidation.error("Token Server Url Key is required.");
+                return FormValidation.error("authorizationServerUrl is required.");
             }
             try {
                 new URL(authorizationServerUrl);
                 return FormValidation.ok();
             } catch (MalformedURLException e) {
-                return FormValidation.error(e,"Not a valid url.");
+                return FormValidation.error(e, "Not a valid url.");
             }
         }
 
@@ -396,7 +396,7 @@ public class OicSecurityRealm extends SecurityRealm {
             if (scopes == null || scopes.trim().length() == 0) {
                 return FormValidation.ok("Using 'openid email'.");
             }
-            if(!scopes.toLowerCase().contains("openid")) {
+            if (!scopes.toLowerCase().contains("openid")) {
                 return FormValidation.warning("Are you sure you don't want to include 'openid' as an scope?");
             }
             return FormValidation.ok();

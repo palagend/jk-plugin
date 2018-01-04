@@ -6,14 +6,17 @@
   <f:entry title="${%Client secret}" field="clientSecret">
     <f:textbox/>
   </f:entry>
-  <f:entry title="${%Token server url}" field="tokenServerUrl">
+  <f:entry title="${%Authorization server url}" field="authorizationServerUrl">
     <f:textbox/>
   </f:entry>
-  <f:entry title="${%Authorization server url}" field="authorizationServerUrl">
+  <f:entry title="${%Token server url}" field="tokenServerUrl">
     <f:textbox/>
   </f:entry>
   <f:entry title="${%UserInfo server url}" field="userInfoServerUrl">
     <f:textbox/>
+  </f:entry>
+  <f:entry title="${%Logout server url}" field="logoutServerUrl">
+      <f:textbox/>
   </f:entry>
   <f:entry title="${%User name field}" field="userNameField">
     <f:textbox/>
