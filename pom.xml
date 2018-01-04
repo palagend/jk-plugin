@@ -10,10 +10,16 @@
     <properties>
         <jenkins.version>1.580.1</jenkins.version>
         <keycloak.version>3.4.0.Final</keycloak.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <bouncycastle.version>1.46</bouncycastle.version>
+        <jackson.version>1.9.9</jackson.version>
+        <jenkins.mailer.version>1.20</jenkins.mailer.version>
+        <iharder.base64.version>2.3.8</iharder.base64.version>
     </properties>
 
     <artifactId>jk-plugin</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.6-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <scm>
@@ -40,49 +46,61 @@
         </license>
     </licenses>
     <dependencies>
+        <!--<dependency>-->
+        <!--<groupId>com.google.oauth-client</groupId>-->
+        <!--<artifactId>google-oauth-client</artifactId>-->
+        <!--<version>1.22.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-authz-client</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-adapter-core</artifactId>
             <version>${keycloak.version}</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-core</artifactId>
-            <version>${keycloak.version}</version>
-            <scope>compile</scope>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>mailer</artifactId>
+            <version>${jenkins.mailer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.iharder</groupId>
+            <artifactId>base64</artifactId>
+            <version>${iharder.base64.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <!--<dependency>-->
         <!--<groupId>org.keycloak</groupId>-->
         <!--<artifactId>keycloak-servlet-oauth-client</artifactId>-->
         <!--<version>${keycloak.version}</version>-->
         <!--</dependency>-->
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client</artifactId>
-            <version>1.22.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.http-client</groupId>
-            <artifactId>google-http-client-jackson2</artifactId>
-            <version>1.22.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>mailer</artifactId>
-            <version>1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.google.oauth-client</groupId>-->
+        <!--<artifactId>google-oauth-client</artifactId>-->
+        <!--<version>1.22.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>com.google.http-client</groupId>-->
+        <!--<artifactId>google-http-client-jackson2</artifactId>-->
+        <!--<version>1.22.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.jenkins-ci.plugins</groupId>-->
+        <!--<artifactId>mailer</artifactId>-->
+        <!--<version>1.6</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>

@@ -1,26 +1,3 @@
-/**
- * The MIT License
- * <p>
- * Copyright (c) 2011 Michael O'Cleirigh
- * <p>
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * <p>
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * <p>
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 package org.jenkinsci.plugins.palagend.jk;
 
 import hudson.Extension;
@@ -35,6 +12,7 @@ import org.acegisecurity.BadCredentialsException;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.RSATokenVerifier;
@@ -89,10 +67,10 @@ public class KeycloakSecurityRealm extends SecurityRealm {
         String redirect = redirectUrl(request);
 
         String state = UUID.randomUUID().toString();
-
         String authUrl = keycloakDeployment.getAuthUrl().clone()
                 .queryParam(OAuth2Constants.CLIENT_ID, keycloakDeployment.getResourceName())
                 .queryParam(OAuth2Constants.REDIRECT_URI, redirect)
+                .queryParam(OAuth2Constants.RESPONSE_TYPE, "code")
                 .queryParam(OAuth2Constants.STATE, state)
                 .build().toString();
         LOGGER.info("In doCommenceLogin, the authUrl is: " + authUrl);
@@ -110,12 +88,6 @@ public class KeycloakSecurityRealm extends SecurityRealm {
         return redirect;
     }
 
-    /**
-     * This is where the user comes back to at the end of the OpenID redirect
-     * ping-pong.
-     *
-     * @throws HttpFailure
-     */
     public HttpResponse doFinishLogin(StaplerRequest request) {
 
         String redirect = redirectUrl(request);
@@ -125,10 +97,13 @@ public class KeycloakSecurityRealm extends SecurityRealm {
             String tokenString = tokenResponse.getToken();
             String idTokenString = tokenResponse.getIdToken();
             String refreshToken = tokenResponse.getRefreshToken();
-            HttpGet get = new HttpGet(keycloakDeployment.getJwksUrl());
             String kid = null;
-            org.apache.http.HttpResponse response = keycloakDeployment.getClient().execute(get);
+            HttpGet get = new HttpGet(keycloakDeployment.getJwksUrl());
+            HttpClient client = keycloakDeployment.getClient();
+            LOGGER.info("client is null?: " + (client == null));
+            org.apache.http.HttpResponse response = client.execute(get);
             int statusCode = response.getStatusLine().getStatusCode();
+            LOGGER.info("statusCode = " + statusCode);
             if (statusCode == HttpStatus.SC_OK) {
                 HttpEntity httpEntity = response.getEntity();
                 if (httpEntity != null) {
@@ -152,8 +127,10 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                 }
             }
 
+        } catch (HttpFailure failure) {
+            LOGGER.log(Level.SEVERE, "status: " + failure.getStatus() + "\terror: " + failure.getError());
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Authentication Exception ", e);
+            LOGGER.log(Level.SEVERE, "Authentication Exception", e);
         }
 
         String referer = (String) request.getSession().getAttribute(REFERER_ATTRIBUTE);
