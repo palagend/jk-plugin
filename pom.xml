@@ -13,13 +13,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <bouncycastle.version>1.46</bouncycastle.version>
-        <jackson.version>1.9.9</jackson.version>
+        <jackson.version>2.9.3</jackson.version>
         <jenkins.mailer.version>1.20</jenkins.mailer.version>
         <iharder.base64.version>2.3.8</iharder.base64.version>
     </properties>
 
     <artifactId>jk-plugin</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <scm>
@@ -46,6 +46,19 @@
         </license>
     </licenses>
     <dependencies>
+        <!--jenkins plugins dependencies-->
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>mailer</artifactId>
+            <version>${jenkins.mailer.version}</version>
+        </dependency>
+        <!--keycloak adapter-->
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-adapter-core</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
+        <!--the dependencies of keycloak adapter-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
@@ -56,68 +69,31 @@
             <artifactId>keycloak-adapter-spi</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-core</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-databind</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-annotations</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.keycloak</groupId>
             <artifactId>keycloak-authz-client</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-adapter-core</artifactId>
-            <version>${keycloak.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>mailer</artifactId>
-            <version>${jenkins.mailer.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>net.iharder</groupId>
-            <artifactId>base64</artifactId>
-            <version>${iharder.base64.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
             <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.keycloak</groupId>-->
-        <!--<artifactId>keycloak-servlet-oauth-client</artifactId>-->
-        <!--<version>${keycloak.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.google.oauth-client</groupId>-->
-        <!--<artifactId>google-oauth-client</artifactId>-->
-        <!--<version>1.22.0</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>com.google.http-client</groupId>-->
-        <!--<artifactId>google-http-client-jackson2</artifactId>-->
-        <!--<version>1.22.0</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.jenkins-ci.plugins</groupId>-->
-        <!--<artifactId>mailer</artifactId>-->
-        <!--<version>1.6</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
