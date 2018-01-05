@@ -19,7 +19,7 @@
     </properties>
 
     <artifactId>jk-plugin</artifactId>
-    <version>1.12-SNAPSHOT</version>
+    <version>1.0.RELEASE</version>
     <packaging>hpi</packaging>
 
     <scm>

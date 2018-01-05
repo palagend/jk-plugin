@@ -32,9 +32,9 @@ import java.util.Map.Entry;
  */
 
 public class ReflectUtil {
-    static final String SPLIT_LINE = "=";// 分割线
-    static final String MY_SIGN = "PALAGEND_PRINT";//默认标记
-    private static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String SPLIT_LINE = "=";// 分割线
+    public static final String MY_SIGN = "PALAGEND_PRINT";//默认标记
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 将集合类型toSring方法
@@ -326,7 +326,7 @@ public class ReflectUtil {
         return objToStr(obj, true);
     }
 
-    private static String covertToString(Object obj, String sign, String content) {
+    private static String convertToString(Object obj, String sign, String content) {
         String begin = indent(15, SPLIT_LINE) + "  " + obj.getClass().getSimpleName()
                 + "  >> " + sign + "  " + indent(10, SPLIT_LINE);
         int length = (begin.length() - sign.length() - 5) / 2;
@@ -336,12 +336,12 @@ public class ReflectUtil {
 
     }
 
-    public static String covertToString(Object obj) {
-        return covertToString(obj, MY_SIGN, objToStr(obj));
+    public static String convertToString(Object obj) {
+        return convertToString(obj, MY_SIGN, objToStr(obj));
     }
 
-    public static void printWithSign(String sign, Object obj) {
-        covertToString(obj, sign, objToStr(obj));
+    public static String convertToStringWithSign(String sign, Object obj) {
+        return convertToString(obj, sign, objToStr(obj));
     }
 }
 

@@ -60,6 +60,10 @@ public class KeycloakSecurityRealm extends SecurityRealm {
         keycloakDeployment = KeycloakDeploymentBuilder.build(adapterConfig);
     }
 
+    public KeycloakDeployment getKeycloakDeployment() {
+        return keycloakDeployment;
+    }
+
     public HttpResponse doCommenceLogin(StaplerRequest request, StaplerResponse response, @Header("Referer") final String referer)
             throws IOException {
         request.getSession().setAttribute(REFERER_ATTRIBUTE, referer);
@@ -75,7 +79,6 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                 .build().toString();
         LOGGER.info("In doCommenceLogin, the authUrl is: " + authUrl);
         return new HttpRedirect(authUrl);
-
     }
 
 
@@ -111,10 +114,8 @@ public class KeycloakSecurityRealm extends SecurityRealm {
             }
             String realmUrl = keycloakDeployment.getRealmInfoUrl();
             AccessToken token = RSATokenVerifier.verifyToken(tokenString, keycloakDeployment.getPublicKeyLocator().getPublicKey(kid, keycloakDeployment), realmUrl);
-            LOGGER.info(ReflectUtil.covertToString(token));
             if (idTokenString != null) {
                 JWSInput input = new JWSInput(idTokenString);
-
                 IDToken idToken = input.readJsonContent(IDToken.class);
                 SecurityContextHolder.getContext().setAuthentication(new KeycloakAuthentication(idToken, token, refreshToken));
 
@@ -124,6 +125,9 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                 if (!currentUser.getProperty(Mailer.UserProperty.class).hasExplicitlyConfiguredAddress()) {
                     currentUser.addProperty(new Mailer.UserProperty(idToken.getEmail()));
                 }
+            } else {
+                LOGGER.warning("idTokenString is null");
+                SecurityContextHolder.getContext().setAuthentication(new KeycloakAuthentication(token, refreshToken));
             }
 
         } catch (HttpFailure failure) {

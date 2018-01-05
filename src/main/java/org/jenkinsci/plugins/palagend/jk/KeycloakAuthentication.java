@@ -27,6 +27,13 @@ public class KeycloakAuthentication extends AbstractAuthenticationToken {
         setAuthenticated(true);
     }
 
+    public KeycloakAuthentication(AccessToken token, String refreshToken) {
+        super(buildRoles(token));
+        this.userName = token.getPreferredUsername();
+        this.refreshToken = refreshToken;
+        setAuthenticated(true);
+    }
+
     private static GrantedAuthority[] buildRoles(AccessToken accessToken) {
         List<GrantedAuthority> roles;
         roles = new ArrayList<GrantedAuthority>();
