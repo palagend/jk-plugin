@@ -109,8 +109,9 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                     kid = JWKSUtils.getKeyForUse(jsonWebKeySet, JWK.Use.SIG).getKeyId();
                 }
             }
-            AccessToken token = RSATokenVerifier.verifyToken(tokenString, keycloakDeployment.getPublicKeyLocator().getPublicKey(kid, keycloakDeployment), keycloakDeployment.getRealm());
-            // TODO: 2018/1/4 org.keycloak.common.VerificationException: Invalid token issuer. Expected 'ci', but was 'http://keycloak.palagend.com/auth/realms/ci'
+
+            String realmUrl = keycloakDeployment.getRealmInfoUrl();
+            AccessToken token = RSATokenVerifier.verifyToken(tokenString, keycloakDeployment.getPublicKeyLocator().getPublicKey(kid, keycloakDeployment), realmUrl);
             if (idTokenString != null) {
                 JWSInput input = new JWSInput(idTokenString);
 
