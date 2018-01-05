@@ -19,7 +19,7 @@
     </properties>
 
     <artifactId>jk-plugin</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.12-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <scm>
@@ -74,21 +74,20 @@
             <artifactId>keycloak-authz-client</artifactId>
             <version>${keycloak.version}</version>
         </dependency>
+        <!--新版本jackson-->
+        <!--<dependency>-->
+        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+        <!--<artifactId>jackson-databind</artifactId>-->
+        <!--<version>${jackson.version}</version>-->
+        <!--</dependency>-->
+
+        <!--旧版jackson-->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.9</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

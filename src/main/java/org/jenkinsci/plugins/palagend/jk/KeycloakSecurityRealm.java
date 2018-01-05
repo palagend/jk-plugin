@@ -109,9 +109,9 @@ public class KeycloakSecurityRealm extends SecurityRealm {
                     kid = JWKSUtils.getKeyForUse(jsonWebKeySet, JWK.Use.SIG).getKeyId();
                 }
             }
-
             String realmUrl = keycloakDeployment.getRealmInfoUrl();
             AccessToken token = RSATokenVerifier.verifyToken(tokenString, keycloakDeployment.getPublicKeyLocator().getPublicKey(kid, keycloakDeployment), realmUrl);
+            LOGGER.info(ReflectUtil.covertToString(token));
             if (idTokenString != null) {
                 JWSInput input = new JWSInput(idTokenString);
 
@@ -154,8 +154,10 @@ public class KeycloakSecurityRealm extends SecurityRealm {
         return new SecurityComponents(
                 new AuthenticationManager() {
                     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                        if (authentication instanceof KeycloakAuthentication)
+                        if (authentication instanceof KeycloakAuthentication) {
+                            LOGGER.info(">>>>>>>>>>>>>>>>>>>>>" + String.valueOf(authentication instanceof KeycloakAuthentication));
                             return authentication;
+                        }
                         throw new BadCredentialsException("Unexpected authentication type: " + authentication);
                     }
                 }
