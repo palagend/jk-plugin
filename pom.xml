@@ -30,7 +30,6 @@
     </scm>
 
     <name>OpenId Connect Authentication Plugin against Keycloak</name>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/Openid+Connect+Authentication+Plugin</url>
     <developers>
         <developer>
             <id>palagend</id>

@@ -1,11 +1,11 @@
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.jenkinsci.plugins.palagend.jk.KeycloakSecurityRealm;
-import org.jenkinsci.plugins.palagend.jk.ReflectUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.keycloak.adapters.KeycloakDeployment;
+import util.ReflectUtil;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -31,6 +31,6 @@ public class MyTest {
 //        } catch (ServerRequest.HttpFailure failure) {
 //            System.out.println(failure.getStatus() + "   " + failure.getError());
 //        }
-//        ReflectUtil.printWithSign("PALAGEND", tokenResponse);
+//        util.ReflectUtil.printWithSign("PALAGEND", tokenResponse);
     }
 }
