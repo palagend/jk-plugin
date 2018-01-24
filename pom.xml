@@ -9,7 +9,7 @@
 
     <properties>
         <jenkins.version>1.580.1</jenkins.version>
-        <keycloak.version>3.4.0.Final</keycloak.version>
+        <keycloak.version>3.4.3.Final</keycloak.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <bouncycastle.version>1.46</bouncycastle.version>
@@ -19,7 +19,7 @@
     </properties>
 
     <artifactId>jk-plugin</artifactId>
-    <version>1.0.RELEASE</version>
+    <version>1.1.RELEASE</version>
     <packaging>hpi</packaging>
 
     <scm>
@@ -74,18 +74,18 @@
             <version>${keycloak.version}</version>
         </dependency>
         <!--新版本jackson-->
-        <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.core</groupId>-->
-        <!--<artifactId>jackson-databind</artifactId>-->
-        <!--<version>${jackson.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
         <!--旧版jackson-->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.9</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.codehaus.jackson</groupId>-->
+        <!--<artifactId>jackson-mapper-asl</artifactId>-->
+        <!--<version>1.9.9</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>junit</groupId>
